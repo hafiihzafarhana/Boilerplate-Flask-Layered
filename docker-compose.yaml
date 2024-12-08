@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15  # Gunakan versi PostgreSQL yang diinginkan
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: hafinov       # Username untuk PostgreSQL
+      POSTGRES_PASSWORD: hafinov # Password untuk PostgreSQL
+      POSTGRES_DB: hafinov     # Nama database yang akan dibuat
+    ports:
+      - "5432:5432"  # Ekspos port 5432 untuk koneksi lokal
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent storage untuk database
+
+volumes:
+  postgres_data:
+    driver: local

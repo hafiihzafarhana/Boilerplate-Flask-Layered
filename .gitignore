@@ -1,0 +1,33 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+
+# Environment variables
+.env
+
+# Flask specific files
+.flaskenv
+instance/
+
+# SQLite database files
+*.sqlite3
+*.db
+
+# Log files
+*.log
+
+# Pytest cache
+.pytest_cache/
+
+# IDE configurations
+.vscode/
+.idea/
+*.iml
+
+# OS-specific files
+Thumbs.db
+.DS_Store
