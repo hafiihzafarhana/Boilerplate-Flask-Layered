@@ -7,6 +7,7 @@ load_dotenv()
 class Config:
     """Base configuration class."""
     SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+    JWT_SECRET_KEY = "your-jwt-secret-key"
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # Disable unnecessary overhead
 
 class DevelopmentConfig(Config):

@@ -1,6 +1,8 @@
-from app import create_app
+from app import FlaskAppFactory
 
-app = create_app(config_name="development")
+# Membuat instance FlaskAppFactory dan mendapatkan aplikasi
+factory = FlaskAppFactory(config_name="development")
+app = factory.get_app()
 
 if __name__ == "__main__":
     app.run(debug=True)

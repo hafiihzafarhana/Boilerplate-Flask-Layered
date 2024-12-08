@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, render_template, request
+from app.middlewares import token_required
 from app.services.item_service import ItemService
 
 item_controller = Blueprint('item_controller', __name__)
@@ -17,6 +18,7 @@ def get_item(item_id):
         return jsonify({'error': 'Item not found'}), 404
 
 @item_controller.route('/item', methods=['POST'])
+@token_required
 def create_item():
     data = request.get_json()
     name = data.get('name')

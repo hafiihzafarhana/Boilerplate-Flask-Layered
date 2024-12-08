@@ -1,33 +1,42 @@
 from flask import Flask
 from sqlalchemy import text
 from core.config import configurations
-from core.extensions import db, migrate
+from core.extensions import db, migrate, jwt
 from app.models import *
 from app.controllers.item_controller import item_controller
 
-def create_app(config_name="development"):
-    app = Flask(__name__)
 
-    # Konfigurasi
-    app.config.from_object(configurations[config_name])
+class FlaskAppFactory:
+    def __init__(self, config_name="development"):
+        """
+        Inisialisasi pabrik aplikasi Flask dengan konfigurasi yang ditentukan.
+        """
+        self.config_name = config_name
+        self.app = Flask(__name__)
+        self._configure_app()
+        self._initialize_extensions()
+        self._register_blueprints()
+        self._initialize_database()
 
-    # Inisialisasi ekstensi (db)
-    db.init_app(app)
-    migrate.init_app(app, db)
-    
-    app.register_blueprint(item_controller)
+    def _configure_app(self):
+        """Konfigurasi aplikasi dari objek konfigurasi."""
+        self.app.config.from_object(configurations[self.config_name])
 
-    # Membuat tabel secara otomatis saat aplikasi pertama kali dijalankan
-    with app.app_context():
-        db.create_all()  # Perbaiki typo: 'creatte_all' menjadi 'create_all'
+    def _initialize_extensions(self):
+        """Inisialisasi ekstensi Flask seperti database dan migrasi."""
+        db.init_app(self.app)
+        migrate.init_app(self.app, db)
+        jwt.init_app(self.app)
 
-    @app.route('/ping-db')
-    def ping_db():
-        try:
-            query = text("SELECT 1")
-            result = db.session.execute(query)
-            return str(result.fetchone())
-        except Exception as e:
-            return {"error": str(e)}, 500
+    def _register_blueprints(self):
+        """Daftarkan blueprint ke aplikasi Flask."""
+        self.app.register_blueprint(item_controller)
 
-    return app
+    def _initialize_database(self):
+        """Inisialisasi dan buat tabel database jika belum ada."""
+        with self.app.app_context():
+            db.create_all()  # Membuat semua tabel
+
+    def get_app(self):
+        """Mengembalikan instance aplikasi Flask."""
+        return self.app
